@@ -94,6 +94,13 @@
 			<version>2.6.2</version>
 			<type>jar</type>
 		</dependency>
+		
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+			<type>jar</type>
+		</dependency>
   </dependencies>
   <build>
     <finalName>pingpp</finalName>
