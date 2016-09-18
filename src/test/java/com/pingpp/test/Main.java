@@ -69,6 +69,7 @@ public class Main {
         chargeMap.put("verify", "xxxooo");
         json = gson.toJson(chargeMap);
         System.out.println(json);
+
     }
 
     private static SecureRandom random = new SecureRandom();
