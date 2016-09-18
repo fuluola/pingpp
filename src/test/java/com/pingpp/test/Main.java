@@ -1,13 +1,17 @@
 package com.pingpp.test;
 
 import java.math.BigInteger;
+import java.net.URL;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.codec.binary.Base64;
+
 import com.google.gson.Gson;
 import com.pingplusplus.Pingpp;
 import com.pingpp.api.model.ChargeDTO;
+import com.pingpp.api.util.SecurityUtil;
 
 /**
  * Created by Afon on 16/4/26.
@@ -64,12 +68,20 @@ public class Main {
         Gson gson = new Gson();
         String json = gson.toJson(dto);
         
+        String encode = new String(new Base64().encode(json.getBytes("utf-8")),"utf-8");
         Map<String, Object> chargeMap = new HashMap<String, Object>();
-        chargeMap.put("content", dto);
-        chargeMap.put("verify", "xxxooo");
+        String verify = SecurityUtil.MD5("123456".getBytes("utf-8"));
+        
+        
+        chargeMap.put("content", encode);
+        chargeMap.put("verify", verify);
         json = gson.toJson(chargeMap);
         System.out.println(json);
-
+        System.out.println(encode);
+        System.out.println(verify);
+        
+        Main main = new Main();
+        main.classLoader();
     }
 
     private static SecureRandom random = new SecureRandom();
@@ -78,4 +90,13 @@ public class Main {
         String str = new BigInteger(130, random).toString(32);
         return str.substring(0, length);
     }
+    
+    public void classLoader(){
+//    	File f = new File(this.getClass().getResource("/").getPath());
+//    	return f.getAbsolutePath();
+    	
+        URL xmlpath = this.getClass().getClassLoader().getResource("");
+        System.out.println(xmlpath.getPath());
+    }
 }
+

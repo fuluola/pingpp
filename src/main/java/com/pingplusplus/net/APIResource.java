@@ -1,5 +1,36 @@
 package com.pingplusplus.net;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.security.InvalidKeyException;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPrivateCrtKeySpec;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+
+import sun.security.util.DerInputStream;
+import sun.security.util.DerValue;
+
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -9,24 +40,13 @@ import com.pingplusplus.exception.APIException;
 import com.pingplusplus.exception.AuthenticationException;
 import com.pingplusplus.exception.ChannelException;
 import com.pingplusplus.exception.InvalidRequestException;
-import com.pingplusplus.model.*;
-import org.apache.commons.codec.binary.Base64;
-import sun.security.util.DerInputStream;
-import sun.security.util.DerValue;
-
-import java.io.*;
-import java.math.BigInteger;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.security.*;
-import java.security.spec.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-
-import javax.net.ssl.HttpsURLConnection;
+import com.pingplusplus.model.Charge;
+import com.pingplusplus.model.ChargeRefundCollection;
+import com.pingplusplus.model.EventData;
+import com.pingplusplus.model.PingppObject;
+import com.pingplusplus.model.PingppRawJsonObject;
+import com.pingplusplus.model.RedEnvelope;
+import com.pingplusplus.model.Transfer;
 
 /**
  * extends the abstract class when you need requset anything from ping++
@@ -583,7 +603,12 @@ public abstract class APIResource extends PingppObject {
             if (Pingpp.privateKeyPath == null) {
                 return null;
             }
-            FileInputStream inputStream = new FileInputStream(Pingpp.privateKeyPath);
+            //FileInputStream inputStream = new FileInputStream(Pingpp.privateKeyPath);
+            InputStream inputStream = null;
+            Resource resource = new ClassPathResource(Pingpp.privateKeyPath);
+            if(resource.isReadable()){
+            	inputStream = resource.getInputStream();
+            }
             byte[] keyBytes = new byte[inputStream.available()];
             inputStream.read(keyBytes);
             inputStream.close();

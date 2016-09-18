@@ -5,26 +5,32 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.model.Charge;
 import com.pingpp.api.model.ChargeDTO;
+import com.pingpp.api.model.ResponseMessage;
 import com.pingpp.api.service.ChargeService;
+import com.pingpp.api.util.PropertiesUtil;
+import com.pingpp.api.util.SecurityUtil;
 
 @Controller
 public class PayIntfController {
 
-    private final static String apiKey = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC";
+    //private final static String apiKey = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC";
+    //private final static String appId = "app_1Gqj58ynP0mHeX1q";
 
-
-    private final static String appId = "app_1Gqj58ynP0mHeX1q";
-
+	 private final static String apiKey = "sk_test_iX5abLDizLW1yDKKmL4m1CCO";
+	 private final static String appId = "app_iDy9yPXH88uTa5uv";
     /**
    * 设置请求签名密钥，密钥对需要你自己用 openssl 工具生成，如何生成可以参考帮助中心：https://help.pingxx.com/article/123161；
    * 生成密钥后，需要在代码中设置请求签名的私钥(rsa_private_key.pem)；
@@ -33,29 +39,52 @@ public class PayIntfController {
    */
 
     // 你生成的私钥路径
-    private final static String privateKeyFilePath = "E:\\workspace\\pingpp\\src\\main\\resources\\conf\\rsa_private_key.pem";
-    
+    //private final static String privateKeyFilePath = "/conf/rsa_private_key.pem";
+	 
+    private final static String privateKeyFilePath = "/conf/rsa_private_key2.pem";
     @Autowired
     private ChargeService chargeService;
     
+    @ResponseBody
 	@RequestMapping(value="client/ping/charge",method = RequestMethod.POST)
-	public String charge(HttpServletRequest request,HttpServletResponse response,
-						@RequestBody Map<String, Object> params){
+	public ResponseMessage charge(HttpServletRequest request,HttpServletResponse response,
+						@RequestBody Map<String, Object> params) throws Exception{
 		
 	     // 设置 API Key
         Pingpp.apiKey = apiKey;
 
         // 设置私钥路径，用于请求签名
         Pingpp.privateKeyPath = privateKeyFilePath;
-        
-        System.out.println("------- 创建 charge -------");
-        Object content = params.get("content");
-       // String reqVerify = (String) params.get("verify");
         Gson gson =new Gson();
-        ChargeDTO dto = gson.fromJson(gson.toJson(content), ChargeDTO.class);
+        System.out.println("------- 创建 charge -------");
+        String content = (String)params.get("content");
+        String deContent = new String(new Base64().decode(content),"utf-8");
+        String verify2 = SecurityUtil.MD5((content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
+        
+        String verify = (String) params.get("verify");
+        ResponseMessage respMsg = null;
+        if(StringUtils.isBlank(verify)){
+        	respMsg = new ResponseMessage(ResponseMessage.ERROR_CODE,"校验字段为空",null);
+        	return respMsg;
+        }
+        if(!verify.equals(verify2)){
+        	respMsg = new ResponseMessage(ResponseMessage.ERROR_CODE,"非法的请求，校验失败",null);
+        	return respMsg;
+        }
+        ChargeDTO dto = gson.fromJson(deContent, ChargeDTO.class);
+        String clientIp = request.getRemoteAddr();
+        dto.setClientIp(clientIp);
         chargeService.setAppId(appId);
-        Charge charge = chargeService.createCharge( dto);
-		return charge.toString();
+        Charge charge = null;
+
+        //发起交易请求
+        // 传到客户端请先转成字符串 .toString(), 调该方法，会自动转成正确的 JSON 字符串
+        charge = chargeService.createCharge(dto);
+        if(charge==null){
+        	respMsg = new ResponseMessage(ResponseMessage.ERROR_CODE,"发起交易请求出现异常",null);
+        }
+        respMsg = new ResponseMessage(ResponseMessage.SUCCESS_CODE,"发起交易请求成功",charge);
+		return respMsg;
 		
 	}
 }

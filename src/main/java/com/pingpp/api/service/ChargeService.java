@@ -19,14 +19,7 @@ import com.pingplusplus.model.ChargeCollection;
 import com.pingpp.api.model.ChargeDTO;
 
 /**
- * Charge 对象相关示例
- *
- * 该实例程序演示了如何从 Ping++ 服务器获得 charge ，查询 charge。
- *
- * 开发者需要填写 apiKey 和 appId ，
- *
  * apiKey 有 TestKey 和 LiveKey 两种。
- *
  * TestKey 模式下不会产生真实的交易。
  */
 @Service
@@ -49,17 +42,6 @@ public class ChargeService {
 	}
 
 	public ChargeService(){}
-    
-    public static void runDemos(String appId) {
-
-       // ChargeService chargeExample = new ChargeService(appId);
-        System.out.println("------- 创建 charge -------");
-        //Charge charge = chargeExample.createCharge();
-        System.out.println("------- 查询 charge -------");
-      //  chargeExample.retrieve(charge.getId());
-        System.out.println("------- 查询 charge 列表 -------");
-       // chargeExample.all();
-    }
 
     /**
      * 创建 Charge
