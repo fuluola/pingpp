@@ -14,6 +14,8 @@ public class ChargeDTO {
 	private String orderNo;
 	private String channel;
 	private String clientIp;
+	private String callbackUrl;
+	
 	/**
 	 * @return the amount
 	 */
@@ -97,6 +99,13 @@ public class ChargeDTO {
 	 */
 	public void setClientIp(String clientIp) {
 		this.clientIp = clientIp;
+	}
+	
+	public String getCallbackUrl() {
+		return callbackUrl;
+	}
+	public void setCallbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
 	}
 	
 	

@@ -1,6 +1,7 @@
 package com.pingplusplus.model;
 
 import com.pingplusplus.net.APIResource;
+import com.pingpp.api.model.WebhooksDTO;
 
 
 /**
@@ -37,5 +38,15 @@ public class Webhooks {
      */
     public static Event eventParse(String eventStr) {
         return APIResource.GSON.fromJson(eventStr, Event.class);
+    }
+    
+    /**
+     * 解析event，返回Event对象
+     *
+     * @param eventStr
+     * @return Event
+     */
+    public static WebhooksDTO eventParse2(String eventStr) {
+        return APIResource.GSON.fromJson(eventStr, WebhooksDTO.class);
     }
 }

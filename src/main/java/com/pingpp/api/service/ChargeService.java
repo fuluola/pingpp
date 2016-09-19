@@ -67,6 +67,10 @@ public class ChargeService {
         Map<String, Object> extra = new HashMap<String, Object>();
 //        extra.put("open_id", "USER_OPENID");
         chargeMap.put("extra", extra);
+        
+        Map<String, String> metadata = new HashMap<String, String>();
+        metadata.put("callbackUrl", dto.getCallbackUrl());
+        chargeMap.put("metadata", metadata);
         try {
             //发起交易请求
             charge = Charge.create(chargeMap);

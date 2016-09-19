@@ -116,7 +116,7 @@
 			<scope>provided</scope>
 		</dependency>
 		
-				<dependency>
+		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
 			<version>${jackson.version}</version>
@@ -130,6 +130,12 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
 			<version>${jackson.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.sf.openapi</groupId>
+			<artifactId>openapi-sdk-java</artifactId>
+			<version>1.0.1</version>
 		</dependency>
   </dependencies>
   <build>

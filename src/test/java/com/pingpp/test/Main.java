@@ -1,5 +1,6 @@
 package com.pingpp.test;
 
+import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.net.URL;
 import java.security.SecureRandom;
@@ -9,8 +10,10 @@ import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.pingplusplus.Pingpp;
 import com.pingpp.api.model.ChargeDTO;
+import com.pingpp.api.model.WebhooksDTO;
 import com.pingpp.api.util.SecurityUtil;
 
 /**
@@ -75,13 +78,9 @@ public class Main {
         
         chargeMap.put("content", encode);
         chargeMap.put("verify", verify);
-        json = gson.toJson(chargeMap);
-        System.out.println(json);
-        System.out.println(encode);
-        System.out.println(verify);
-        
-        Main main = new Main();
-        main.classLoader();
+       // json = gson.toJson(event);
+        parseEvent();
+
     }
 
     private static SecureRandom random = new SecureRandom();
@@ -97,6 +96,63 @@ public class Main {
     	
         URL xmlpath = this.getClass().getClassLoader().getResource("");
         System.out.println(xmlpath.getPath());
+    }
+    public static void parseEvent(){
+    	String json = "{"
+    			+"\"id\":\"evt_2ersVj0xe6N1T4GEWvSyg4Yb\","
+    			+"\"created\":1458736877,"
+    			+"\"livemode\":true,"
+    			+"\"type\":\"charge.succeeded\","
+    			+"\"data\":{"
+    			+"\"object\":{"
+    			+"\"id\":\"ch_bLOivPXjvj1OWvfH44WLenrD\","
+    			+"\"object\":\"charge\","
+    			+"\"created\":1458736849,"
+    			+"\"livemode\":true,"
+    			+"\"paid\":true,"
+    			+"\"refunded\":false,"
+    			+"\"app\":\"app_1Gqj58ynP0mHeX1q\","
+    			+"\"channel\":\"alipay_wap\","
+    			+"\"order_no\":\"123456789\","
+    			+"\"client_ip\":\"116.228.208.114\","
+    			+"\"amount\":100,"
+    			+"\"amount_settle\":100,"
+    			+"\"currency\":\"cny\","
+    			+"\"subject\":\"YourSubject\","
+    			+"\"body\":\"YourBody.\","
+    			+"\"extra\":{"
+    			+"\"success_url\":\"http://example.com/success\","
+    			+"\"cancel_url\":\"http://example.com/cancel\","
+    			+"\"buyer_account\":\"xinxinzhilianode@126.com\""
+    			+"},"
+    			+"\"time_paid\":1458736875,"
+    			+"\"time_expire\":1458823249,"
+    			+"\"time_settle\":null,"
+    			+"\"transaction_no\":\"2016032321001004770283682851\","
+    			+"\"refunds\":{"
+    			+"\"object\":\"list\","
+    			+"\"url\":\"/v1/charges/ch_bLOivPXjvj1OWvfH44WLenrD/refunds\","
+    			+"\"has_more\":false,"
+    			+"\"data\":[]"
+    			+"},"
+    			+"\"amount_refunded\":0,"
+    			+"\"failure_code\":null,"
+    			+"\"failure_msg\":null,"
+    			+"\"metadata\":{"
+    			+"\"callbackUrl\":\"http://112.163.152.19:8082\""
+    			+"},"
+    			+"\"credential\":{},"
+    			+"\"description\":\"YourDescription\""
+    			+"}"
+    			+"},"
+    			+"\"object\":\"event\","
+    			+"\"pending_webhooks\":71,"
+    			+"\"request\":\"iar_ebTWPK8KGivPbD4OaPOeb1q5\""
+    			+"}";
+        Gson gson = new Gson();
+        Type type = new TypeToken<WebhooksDTO>(){}.getType();
+        WebhooksDTO event = gson.fromJson(json, type);
+    	System.out.println(event.getData().getCallbackUrl());
     }
 }
 
