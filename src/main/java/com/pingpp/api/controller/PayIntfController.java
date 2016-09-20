@@ -36,8 +36,8 @@ public class PayIntfController {
     //private final static String apiKey = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC";
     //private final static String appId = "app_1Gqj58ynP0mHeX1q";
 
-	 private final static String apiKey = "sk_test_iX5abLDizLW1yDKKmL4m1CCO";
-	 //private final static String apiKey = "sk_live_ejnLuPrTKWPSmbnLK4qvb9C0";
+	 //private final static String apiKey = "sk_test_iX5abLDizLW1yDKKmL4m1CCO";
+	 private final static String apiKey = "sk_live_ejnLuPrTKWPSmbnLK4qvb9C0";
 	 private final static String appId = "app_iDy9yPXH88uTa5uv";
 	 
 	 

@@ -17,6 +17,7 @@ import com.pingplusplus.exception.PingppException;
 import com.pingplusplus.model.Charge;
 import com.pingplusplus.model.ChargeCollection;
 import com.pingpp.api.model.ChargeDTO;
+import com.pingpp.api.model.Constants;
 
 /**
  * apiKey 有 TestKey 和 LiveKey 两种。
@@ -72,10 +73,20 @@ public class ChargeService {
         Map<String, Object> extra = new HashMap<String, Object>();
 //        extra.put("open_id", "USER_OPENID");
       //success_url 和 cancel_url 在本地测试不要写 localhost ，写 127.0.0.1，URL 后面不要加自定义参数
-        extra.put("success_url", dto.getSuccessUrl());
-        extra.put("cancel_url", "http://127.0.0.1:8080/pingpp");
-        chargeMap.put("extra", extra);
-        
+        if(Constants.PayChannel.ALIPAY_WAP.value.equals(dto.getChannel())){
+        	
+        	extra.put("success_url", dto.getSuccessUrl());
+        	extra.put("cancel_url", "http://127.0.0.1:8080/pingpp");
+        	chargeMap.put("extra", extra);
+        }else if(Constants.PayChannel.ALIPAY_PC.value.equals(dto.getChannel())){
+        	extra.put("success_url", dto.getSuccessUrl());
+        	chargeMap.put("extra", extra);
+        }else if(Constants.PayChannel.ALIPAY_QR.value.equals(dto.getChannel())){
+        	
+        }else if(Constants.PayChannel.WX_PUB.value.equals(dto.getChannel())){
+        	  extra.put("open_id", "User OpenId");
+        	  chargeMap.put("extra", extra);
+        }
         Map<String, String> metadata = new HashMap<String, String>();
         metadata.put("callbackUrl", dto.getCallbackUrl());
         chargeMap.put("metadata", metadata);

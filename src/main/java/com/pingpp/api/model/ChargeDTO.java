@@ -16,6 +16,8 @@ public class ChargeDTO {
 	private String clientIp;
 	private String callbackUrl;
 	private String successUrl;
+	private String cancelUrl;
+	private String wxPub;
 	
 	/**
 	 * @return the amount
@@ -119,6 +121,18 @@ public class ChargeDTO {
 	 */
 	public void setSuccessUrl(String successUrl) {
 		this.successUrl = successUrl;
+	}
+	public String getCancelUrl() {
+		return cancelUrl;
+	}
+	public void setCancelUrl(String cancelUrl) {
+		this.cancelUrl = cancelUrl;
+	}
+	public String getWxPub() {
+		return wxPub;
+	}
+	public void setWxPub(String wxPub) {
+		this.wxPub = wxPub;
 	}
 	
 	

@@ -63,13 +63,14 @@ public class Main {
         ChargeDTO dto = new ChargeDTO();
         dto.setAmount(1);
         dto.setBody("my test");
-        dto.setChannel("alipay");
+        dto.setChannel("alipay_wap");
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
         dto.setOrderNo("HB123456");
         dto.setSubject("my subject");
         dto.setSuccessUrl("http://www.baidu.com");
+        dto.setCallbackUrl("http://127.0.0.1:8080/pingxx");
         Gson gson = new Gson();
         String json = gson.toJson(dto);
         
