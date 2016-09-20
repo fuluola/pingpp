@@ -1,6 +1,7 @@
 package com.pingpp.api.util;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * @author fuzhuan
@@ -37,7 +38,7 @@ public class SecurityUtil {
 
     }
 
-    public static String MD5(byte[] data) throws Exception {
+    public static String MD5(byte[] data) throws NoSuchAlgorithmException {
         
             MessageDigest md5 = MessageDigest.getInstance(KEY_MD5);
             md5.update(data);

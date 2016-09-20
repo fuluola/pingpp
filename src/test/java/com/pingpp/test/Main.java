@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.pingplusplus.Pingpp;
 import com.pingpp.api.model.ChargeDTO;
 import com.pingpp.api.model.WebhooksDTO;
+import com.pingpp.api.util.PropertiesUtil;
 import com.pingpp.api.util.SecurityUtil;
 
 /**
@@ -60,7 +61,7 @@ public class Main {
     //    ChargeExample.runDemos(appId);
         
         ChargeDTO dto = new ChargeDTO();
-        dto.setAmount(1500);
+        dto.setAmount(1);
         dto.setBody("my test");
         dto.setChannel("alipay");
         dto.setClientIp("127.0.0.1");
@@ -68,18 +69,22 @@ public class Main {
         
         dto.setOrderNo("HB123456");
         dto.setSubject("my subject");
+        dto.setSuccessUrl("http://www.baidu.com");
         Gson gson = new Gson();
         String json = gson.toJson(dto);
         
         String encode = new String(new Base64().encode(json.getBytes("utf-8")),"utf-8");
         Map<String, Object> chargeMap = new HashMap<String, Object>();
-        String verify = SecurityUtil.MD5("123456".getBytes("utf-8"));
+        String verify = SecurityUtil.MD5((encode+PropertiesUtil.getSecretKey()).getBytes("utf-8"));
         
         
         chargeMap.put("content", encode);
         chargeMap.put("verify", verify);
+
+          json = gson.toJson(chargeMap);
+          System.out.println(json);
        // json = gson.toJson(event);
-        parseEvent();
+        //parseEvent();
 
     }
 

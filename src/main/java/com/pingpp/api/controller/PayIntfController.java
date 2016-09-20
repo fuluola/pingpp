@@ -1,5 +1,7 @@
 package com.pingpp.api.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.pingplusplus.Pingpp;
+import com.pingplusplus.exception.APIConnectionException;
+import com.pingplusplus.exception.APIException;
+import com.pingplusplus.exception.AuthenticationException;
+import com.pingplusplus.exception.ChannelException;
+import com.pingplusplus.exception.InvalidRequestException;
 import com.pingplusplus.model.Charge;
 import com.pingpp.api.model.ChargeDTO;
 import com.pingpp.api.model.ResponseMessage;
@@ -30,7 +37,10 @@ public class PayIntfController {
     //private final static String appId = "app_1Gqj58ynP0mHeX1q";
 
 	 private final static String apiKey = "sk_test_iX5abLDizLW1yDKKmL4m1CCO";
+	 //private final static String apiKey = "sk_live_ejnLuPrTKWPSmbnLK4qvb9C0";
 	 private final static String appId = "app_iDy9yPXH88uTa5uv";
+	 
+	 
     /**
    * 设置请求签名密钥，密钥对需要你自己用 openssl 工具生成，如何生成可以参考帮助中心：https://help.pingxx.com/article/123161；
    * 生成密钥后，需要在代码中设置请求签名的私钥(rsa_private_key.pem)；
@@ -39,16 +49,15 @@ public class PayIntfController {
    */
 
     // 你生成的私钥路径
-    //private final static String privateKeyFilePath = "/conf/rsa_private_key.pem";
-	 
-    private final static String privateKeyFilePath = "/conf/rsa_private_key2.pem";
+    private final static String privateKeyFilePath = "/conf/rsa_private_key.pem";
+
     @Autowired
     private ChargeService chargeService;
     
     @ResponseBody
 	@RequestMapping(value="client/ping/charge",method = RequestMethod.POST)
 	public ResponseMessage charge(HttpServletRequest request,HttpServletResponse response,
-						@RequestBody Map<String, Object> params) throws Exception{
+						@RequestBody Map<String, Object> params) {
 		
 	     // 设置 API Key
         Pingpp.apiKey = apiKey;
@@ -58,8 +67,18 @@ public class PayIntfController {
         Gson gson =new Gson();
         System.out.println("------- 创建 charge -------");
         String content = (String)params.get("content");
-        String deContent = new String(new Base64().decode(content),"utf-8");
-        String verify2 = SecurityUtil.MD5((content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
+        String deContent = null;
+        String verify2 = null;
+		try {
+			deContent = new String(new Base64().decode(content),"utf-8");
+			System.out.println("请求参数-----\n"+deContent);
+			verify2 = SecurityUtil.MD5((content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+			
+			e.printStackTrace();
+			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),null);
+		}
+		
         
         String verify = (String) params.get("verify");
         ResponseMessage respMsg = null;
@@ -79,7 +98,14 @@ public class PayIntfController {
 
         //发起交易请求
         // 传到客户端请先转成字符串 .toString(), 调该方法，会自动转成正确的 JSON 字符串
-        charge = chargeService.createCharge(dto);
+        try {
+			charge = chargeService.createCharge(dto);
+		} catch (AuthenticationException | InvalidRequestException | APIConnectionException | APIException
+				| ChannelException e) {
+			
+			e.printStackTrace();
+			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),null);
+		}
         if(charge==null){
         	respMsg = new ResponseMessage(ResponseMessage.ERROR_CODE,"发起交易请求出现异常",null);
         }

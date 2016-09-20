@@ -49,8 +49,13 @@ public class ChargeService {
      * 创建 Charge 用户需要组装一个 map 对象作为参数传递给 Charge.create();
      * map 里面参数的具体说明请参考：https://pingxx.com/document/api#api-c-new
      * @return Charge
+     * @throws ChannelException 
+     * @throws APIException 
+     * @throws APIConnectionException 
+     * @throws InvalidRequestException 
+     * @throws AuthenticationException 
      */
-    public Charge createCharge(ChargeDTO dto ) {
+    public Charge createCharge(ChargeDTO dto ) throws AuthenticationException, InvalidRequestException, APIConnectionException, APIException, ChannelException {
         Charge charge = null;
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         chargeMap.put("amount", dto.getAmount());//订单总金额, 人民币单位：分（如订单总金额为 1 元，此处请填 100）
@@ -66,20 +71,20 @@ public class ChargeService {
 
         Map<String, Object> extra = new HashMap<String, Object>();
 //        extra.put("open_id", "USER_OPENID");
+      //success_url 和 cancel_url 在本地测试不要写 localhost ，写 127.0.0.1，URL 后面不要加自定义参数
+        extra.put("success_url", dto.getSuccessUrl());
+        extra.put("cancel_url", "http://127.0.0.1:8080/pingpp");
         chargeMap.put("extra", extra);
         
         Map<String, String> metadata = new HashMap<String, String>();
         metadata.put("callbackUrl", dto.getCallbackUrl());
         chargeMap.put("metadata", metadata);
-        try {
-            //发起交易请求
-            charge = Charge.create(chargeMap);
-            // 传到客户端请先转成字符串 .toString(), 调该方法，会自动转成正确的 JSON 字符串
-            String chargeString = charge.toString();
-            System.out.println(chargeString);
-        } catch (PingppException e) {
-            e.printStackTrace();
-        }
+        
+        //发起交易请求
+        charge = Charge.create(chargeMap);
+        // 传到客户端请先转成字符串 .toString(), 调该方法，会自动转成正确的 JSON 字符串
+        String chargeString = charge.toString();
+        System.out.println(chargeString);
         return charge;
     }
 

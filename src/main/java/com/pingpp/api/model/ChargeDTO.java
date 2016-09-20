@@ -15,6 +15,7 @@ public class ChargeDTO {
 	private String channel;
 	private String clientIp;
 	private String callbackUrl;
+	private String successUrl;
 	
 	/**
 	 * @return the amount
@@ -106,6 +107,18 @@ public class ChargeDTO {
 	}
 	public void setCallbackUrl(String callbackUrl) {
 		this.callbackUrl = callbackUrl;
+	}
+	/**
+	 * @return the successUrl
+	 */
+	public String getSuccessUrl() {
+		return successUrl;
+	}
+	/**
+	 * @param successUrl the successUrl to set
+	 */
+	public void setSuccessUrl(String successUrl) {
+		this.successUrl = successUrl;
 	}
 	
 	
