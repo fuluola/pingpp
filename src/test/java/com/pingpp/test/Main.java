@@ -62,13 +62,14 @@ public class Main {
         
         ChargeDTO dto = new ChargeDTO();
         dto.setAmount(1);
-        dto.setBody("my test");
-        dto.setChannel("alipay_wap");
+        dto.setBody("my wx_pub");
+        dto.setChannel("wx_pub");
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
         dto.setOrderNo("HB123456");
         dto.setSubject("my subject");
+        dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
         dto.setSuccessUrl("http://www.baidu.com");
         dto.setCallbackUrl("http://127.0.0.1:8080/pingxx");
         Gson gson = new Gson();

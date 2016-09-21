@@ -25,4 +25,24 @@ public class PropertiesUtil {
 	public static String getSecretKey(){
 		return properties.getProperty("secretKey");
 	}
+
+	/**
+	 * @date 2016年9月22日上午8:01:27
+	 * @author fuzhuan
+	 * @return
+	 * 
+	 */
+	public static String getLiveApikey() {
+		return properties.getProperty("live.apiKey");
+	}
+
+	/**
+	 * @date 2016年9月22日上午8:02:33
+	 * @author fuzhuan
+	 * @return
+	 * 
+	 */
+	public static String getTestApikey() {
+		return properties.getProperty("test.apiKey");
+	}
 }

@@ -12,10 +12,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.pingplusplus.model.Webhooks;
-import com.pingpp.api.model.ResponseMessage;
 import com.pingpp.api.model.WebhooksDTO;
 import com.pingpp.api.util.HttpUtils;
 import com.pingpp.api.util.WebhooksVerifyUtil;
@@ -27,7 +24,7 @@ import com.pingpp.api.util.WebhooksVerifyUtil;
 @Controller
 public class WebhooksController {
 	
-	@RequestMapping(value="client/ping/webhooks")
+	@RequestMapping(value="server/webhooks/charge")
 	public void webhooks(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		request.setCharacterEncoding("UTF8");
         //获取头部所有信息
@@ -38,11 +35,10 @@ public class WebhooksController {
             String key = (String) headerNames.nextElement();
             if("x-pingplusplus-signature".equalsIgnoreCase(key)){
             	signature = request.getHeader(key);
+            	break;
             }
-            String value = request.getHeader(key);
-            
-            System.out.println(key+" "+value);
         }
+        System.out.println("x-pingplusplus-signature:"+signature);
         // 获得 http body 内容
         BufferedReader reader = request.getReader();
         StringBuffer buffer = new StringBuffer();
@@ -52,6 +48,7 @@ public class WebhooksController {
         }
         reader.close();
         webhooksRawPostData = buffer.toString();
+        System.out.println("-----webhooks返回的body------\n"+webhooksRawPostData);
         boolean isVerify = false;
         try {
         	isVerify = WebhooksVerifyUtil.verifyData(webhooksRawPostData, signature);
@@ -62,7 +59,7 @@ public class WebhooksController {
 		}
         WebhooksDTO event = null;
         String callbackResult = null;
-        ResponseMessage respMsg = null;
+//        ResponseMessage respMsg = null;
         if(isVerify){
         	
         	// 解析异步通知数据
@@ -72,11 +69,16 @@ public class WebhooksController {
         	data[0] = new NameValuePair("content", Base64.encodeBase64String(webhooksRawPostData.getBytes("utf-8")));
         	data[1] = new NameValuePair("verify", Base64.encodeBase64String(webhooksRawPostData.getBytes("utf-8")));
         	callbackResult = HttpUtils.sendRequest(callbackUrl, data, "utf-8", 3000);
-        	Gson gson= new GsonBuilder().create();
-        	respMsg = gson.fromJson(callbackResult, ResponseMessage.class);
+//        	Gson gson= new GsonBuilder().create();
+//        	respMsg = gson.fromJson(callbackResult, ResponseMessage.class);
+        	System.out.println("----客户端接受webhooks返回值-----\n"+callbackResult);
+        }else{
+        	System.out.println("-----接受webhooks验证没有通过-----");
+        	response.setStatus(500);
+        	return;
         }
         
-        if ("charge.succeeded".equals(event.getType()) && respMsg!=null && ResponseMessage.SUCCESS_CODE.equals(respMsg.getCode())) {
+        if ("charge.succeeded".equals(event.getType())) {
             response.setStatus(200);
         }  else {
             response.setStatus(500);
