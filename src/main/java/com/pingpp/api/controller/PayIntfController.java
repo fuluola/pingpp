@@ -36,7 +36,7 @@ public class PayIntfController {
     //private final static String apiKey = "sk_test_ibbTe5jLGCi5rzfH4OqPW9KC";
     //private final static String appId = "app_1Gqj58ynP0mHeX1q";
 
-	 //private final static String apiKey = "sk_test_iX5abLDizLW1yDKKmL4m1CCO";
+//	 private final static String apiKey = "sk_test_iX5abLDizLW1yDKKmL4m1CCO";
 	 private final static String apiKey = "sk_live_ejnLuPrTKWPSmbnLK4qvb9C0";
 	 private final static String appId = "app_iDy9yPXH88uTa5uv";
 	 
@@ -48,7 +48,7 @@ public class PayIntfController {
    * 将你的公钥复制粘贴进去并且保存->先启用 Test 模式进行测试->测试通过后启用 Live 模式
    */
 
-    // 你生成的私钥路径
+    // 生成的私钥路径
     private final static String privateKeyFilePath = "/conf/rsa_private_key.pem";
 
     @Autowired
@@ -61,7 +61,6 @@ public class PayIntfController {
 		
 	     // 设置 API Key
         Pingpp.apiKey = apiKey;
-
         // 设置私钥路径，用于请求签名
         Pingpp.privateKeyPath = privateKeyFilePath;
         Gson gson =new Gson();
@@ -71,7 +70,7 @@ public class PayIntfController {
         String verify2 = null;
 		try {
 			deContent = new String(new Base64().decode(content),"utf-8");
-			System.out.println("请求参数-----\n"+deContent);
+			System.out.println("-----请求参数-----\n"+deContent);
 			verify2 = SecurityUtil.MD5((content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
 			
@@ -79,7 +78,6 @@ public class PayIntfController {
 			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),null);
 		}
 		
-        
         String verify = (String) params.get("verify");
         ResponseMessage respMsg = null;
         if(StringUtils.isBlank(verify)){
@@ -91,26 +89,41 @@ public class PayIntfController {
         	return respMsg;
         }
         ChargeDTO dto = gson.fromJson(deContent, ChargeDTO.class);
-        String clientIp = request.getRemoteAddr();
-        dto.setClientIp(clientIp);
+        dto.setClientIp(request.getRemoteAddr());
         chargeService.setAppId(appId);
         Charge charge = null;
-
         //发起交易请求
         // 传到客户端请先转成字符串 .toString(), 调该方法，会自动转成正确的 JSON 字符串
         try {
 			charge = chargeService.createCharge(dto);
 		} catch (AuthenticationException | InvalidRequestException | APIConnectionException | APIException
 				| ChannelException e) {
-			
 			e.printStackTrace();
 			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),null);
 		}
         if(charge==null){
-        	respMsg = new ResponseMessage(ResponseMessage.ERROR_CODE,"发起交易请求出现异常",null);
+        	respMsg = new ResponseMessage(ResponseMessage.ERROR_CODE,"没有返回支付对象",null);
         }
         respMsg = new ResponseMessage(ResponseMessage.SUCCESS_CODE,"发起交易请求成功",charge);
 		return respMsg;
-		
 	}
+    
+    @ResponseBody
+   	@RequestMapping(value="client/ping/retrieve",method = RequestMethod.POST)
+    public ResponseMessage retrieve(HttpServletRequest request,String orderId) {
+    	
+    	if(StringUtils.isBlank(orderId)){
+    		return new ResponseMessage(ResponseMessage.ERROR_CODE,"订单id不能为空",null);
+    	}
+    	Charge charge = null;
+		try {
+			charge = chargeService.retrieve(orderId);
+		} catch (AuthenticationException | InvalidRequestException
+				| APIConnectionException | APIException | ChannelException e) {
+			
+			e.printStackTrace();
+			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),charge);
+		}
+    	return new ResponseMessage(ResponseMessage.SUCCESS_CODE,"发起交易请求成功",charge);
+    }
 }

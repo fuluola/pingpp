@@ -9,6 +9,7 @@ package com.pingpp.test;
 
 import java.util.*;
 
+import com.pingplusplus.Pingpp;
 import com.pingplusplus.exception.APIConnectionException;
 import com.pingplusplus.exception.APIException;
 import com.pingplusplus.exception.AuthenticationException;
@@ -37,6 +38,13 @@ public class ChargeExample {
         this.appId = appId;
     }
 
+    public static void main(String[] args) {
+    	Pingpp.apiKey = "sk_live_ejnLuPrTKWPSmbnLK4qvb9C0";
+    	ChargeExample chargeExample = new ChargeExample("app_iDy9yPXH88uTa5uv");
+    	Charge charge = chargeExample.retrieve("ch_XP8Ga1qfnf5GC8ezf9P8yDmL");
+    	
+    	System.out.println(charge.toString());
+	}
     public static void runDemos(String appId) {
 
         ChargeExample chargeExample = new ChargeExample(appId);
@@ -44,8 +52,8 @@ public class ChargeExample {
         Charge charge = chargeExample.createCharge();
         System.out.println("------- 查询 charge -------");
         chargeExample.retrieve(charge.getId());
-        System.out.println("------- 查询 charge 列表 -------");
-        chargeExample.all();
+        //System.out.println("------- 查询 charge 列表 -------");
+       // chargeExample.all();
     }
 
     /**

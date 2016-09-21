@@ -84,7 +84,7 @@ public class ChargeService {
         }else if(Constants.PayChannel.ALIPAY_QR.value.equals(dto.getChannel())){
         	
         }else if(Constants.PayChannel.WX_PUB.value.equals(dto.getChannel())){
-        	  extra.put("open_id", "User OpenId");
+        	  extra.put("open_id", dto.getOpenId());
         	  chargeMap.put("extra", extra);
         }
         Map<String, String> metadata = new HashMap<String, String>();
@@ -109,20 +109,21 @@ public class ChargeService {
      * 该接口可以传递一个 expand ， 返回的 charge 中的 app 会变成 app 对象。
      * 参考文档： https://pingxx.com/document/api#api-expanding
      * @param id
+     * @throws ChannelException 
+     * @throws APIException 
+     * @throws APIConnectionException 
+     * @throws InvalidRequestException 
+     * @throws AuthenticationException 
      */
-    public Charge retrieve(String id) {
+    public Charge retrieve(String id) throws AuthenticationException, InvalidRequestException, APIConnectionException, APIException, ChannelException {
         Charge charge = null;
-        try {
-            Map<String, Object> params = new HashMap<String, Object>();
+       
+        Map<String, Object> params = new HashMap<String, Object>();
 //            List<String> expand = new ArrayList<String>();
 //            expand.add("app");
 //            params.put("expand", expand);
-            charge = Charge.retrieve(id, params);
-            System.out.println(charge);
-        } catch (PingppException e) {
-            e.printStackTrace();
-        }
-
+        charge = Charge.retrieve(id, params);
+        System.out.println(charge);
         return charge;
     }
 

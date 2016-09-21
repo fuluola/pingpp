@@ -18,7 +18,7 @@ public class ChargeDTO {
 	private String successUrl;
 	private String cancelUrl;
 	private String wxPub;
-	
+	private String openId;
 	/**
 	 * @return the amount
 	 */
@@ -133,6 +133,12 @@ public class ChargeDTO {
 	}
 	public void setWxPub(String wxPub) {
 		this.wxPub = wxPub;
+	}
+	public String getOpenId() {
+		return openId;
+	}
+	public void setOpenId(String openId) {
+		this.openId = openId;
 	}
 	
 	
