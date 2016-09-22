@@ -39,6 +39,7 @@ public class PayIntfController {
 	// private final static String apiKey = "sk_live_ejnLuPrTKWPSmbnLK4qvb9C0";
 //	private final static String apiKey = PropertiesUtil.getTestApikey();
 	private final static String apiKey = PropertiesUtil.getLiveApikey();
+
 	 private final static String appId = "app_iDy9yPXH88uTa5uv";
 	 
 	 
