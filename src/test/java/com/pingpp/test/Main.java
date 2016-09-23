@@ -74,14 +74,15 @@ public class Main {
         dto.setCallbackUrl("http://127.0.0.1:8080/pingxx");
         Gson gson = new Gson();
         String json = gson.toJson(dto);
-        
-        String encode = new String(new Base64().encode(json.getBytes("utf-8")),"utf-8");
+        String orderId = "ch_XP8Ga1qfnf5GC8ezf9P8yDmL";
+        String encode = new String(new Base64().encode(orderId.getBytes("utf-8")),"utf-8");
         Map<String, Object> chargeMap = new HashMap<String, Object>();
-        String verify = SecurityUtil.MD5((encode+PropertiesUtil.getSecretKey()).getBytes("utf-8"));
+        String verify = SecurityUtil.MD5(("dingyi"+encode+PropertiesUtil.getSecretKey()).getBytes("utf-8"));
         
-        
+        chargeMap.put("partner", "dingyi");
         chargeMap.put("content", encode);
         chargeMap.put("verify", verify);
+        
 
           json = gson.toJson(chargeMap);
           System.out.println(json);

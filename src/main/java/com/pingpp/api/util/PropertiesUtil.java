@@ -1,6 +1,8 @@
 package com.pingpp.api.util;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.springframework.core.io.ClassPathResource;
@@ -44,5 +46,11 @@ public class PropertiesUtil {
 	 */
 	public static String getTestApikey() {
 		return properties.getProperty("test.apiKey");
+	}
+
+	public static List<String> getPartnerId() {
+		String partnerId = properties.getProperty("partner.id");
+		String[] ids = partnerId.split(",");
+		return Arrays.asList(ids);
 	}
 }

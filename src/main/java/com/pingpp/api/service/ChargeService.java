@@ -89,6 +89,7 @@ public class ChargeService {
         }
         Map<String, String> metadata = new HashMap<String, String>();
         metadata.put("callbackUrl", dto.getCallbackUrl());
+        metadata.put("partner", dto.getPartner());
         chargeMap.put("metadata", metadata);
         
         //发起交易请求

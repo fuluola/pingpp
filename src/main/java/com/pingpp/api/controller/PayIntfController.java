@@ -2,6 +2,7 @@ package com.pingpp.api.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,6 +66,13 @@ public class PayIntfController {
         Pingpp.apiKey = apiKey;
         // 设置私钥路径，用于请求签名
         Pingpp.privateKeyPath = privateKeyFilePath;
+        
+        String partner=(String)params.get("partner");
+        List<String> idList = PropertiesUtil.getPartnerId();
+        
+        if(StringUtils.isEmpty(partner) || !idList.contains(partner)){
+        	return new ResponseMessage(ResponseMessage.ERROR_CODE,"partner参数为空或者在系统不存在",null);
+        }
         Gson gson =new Gson();
         System.out.println("------- 创建 charge -------");
         String content = (String)params.get("content");
@@ -73,7 +81,7 @@ public class PayIntfController {
 		try {
 			deContent = new String(new Base64().decode(content),"utf-8");
 			System.out.println("-----请求参数-----\n"+deContent);
-			verify2 = SecurityUtil.MD5((content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
+			verify2 = SecurityUtil.MD5((partner+content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
 			
 			e.printStackTrace();
@@ -91,6 +99,7 @@ public class PayIntfController {
         	return respMsg;
         }
         ChargeDTO dto = gson.fromJson(deContent, ChargeDTO.class);
+        dto.setPartner(partner);
         dto.setClientIp(request.getRemoteAddr());
         chargeService.setAppId(appId);
         Charge charge = null;
@@ -116,13 +125,19 @@ public class PayIntfController {
     	
     	   // 设置 API Key
         Pingpp.apiKey = apiKey;
-        String content = (String)params.get("content");
         String id = null;
         String verify2 = null;
+        String partner=(String)params.get("partner");
+        List<String> idList = PropertiesUtil.getPartnerId();
+        
+        if(StringUtils.isEmpty(partner) || !idList.contains(partner)){
+        	return new ResponseMessage(ResponseMessage.ERROR_CODE,"partner参数为空或者在系统不存在",null);
+        }
+        String content = (String)params.get("content");
 		try {
 			id = new String(new Base64().decode(content),"utf-8");
 			System.out.println("-----请求参数-----\n"+id);
-			verify2 = SecurityUtil.MD5((content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
+			verify2 = SecurityUtil.MD5((partner+content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
 			
 			e.printStackTrace();
