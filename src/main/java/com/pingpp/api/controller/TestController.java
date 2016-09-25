@@ -12,11 +12,11 @@ import com.pingpp.api.model.ResponseMessage;
 @Controller
 public class TestController {
 
-	@RequestMapping(value="test")
+	@RequestMapping(value="")
 	@ResponseBody
-	public Object test(HttpServletRequest request, HttpServletResponse response){
+	public String test(HttpServletRequest request, HttpServletResponse response){
 	
 		 response.setStatus(200);
-		 return new ResponseMessage("0","接受状态成功",null);
+		 return "欢迎来到PINGXX服务端";
 	}
 }
