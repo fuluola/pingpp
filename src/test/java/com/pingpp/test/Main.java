@@ -62,8 +62,8 @@ public class Main {
         
         ChargeDTO dto = new ChargeDTO();
         dto.setAmount(1);
-        dto.setBody("my wx_pub");
-        dto.setChannel("wx_pub");
+        dto.setBody("my wx_wap");
+        dto.setChannel("wx_wap");
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
@@ -71,11 +71,11 @@ public class Main {
         dto.setSubject("my subject");
         dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
         dto.setSuccessUrl("http://www.baidu.com");
-        dto.setCallbackUrl("http://127.0.0.1:8080/pingxx");
+        dto.setCallbackUrl("http://127.0.0.1:8080/");
         Gson gson = new Gson();
         String json = gson.toJson(dto);
         String orderId = "ch_XP8Ga1qfnf5GC8ezf9P8yDmL";
-        String encode = new String(new Base64().encode(orderId.getBytes("utf-8")),"utf-8");
+        String encode = new String(new Base64().encode(json.getBytes("utf-8")),"utf-8");
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         String verify = SecurityUtil.MD5(("dingyi"+encode+PropertiesUtil.getSecretKey()).getBytes("utf-8"));
         

@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,6 +26,8 @@ import com.pingpp.api.util.WebhooksVerifyUtil;
 @Controller
 public class WebhooksController {
 	
+	private static Log log = LogFactory.getLog(WebhooksController.class);
+	
 	@RequestMapping(value="server/webhooks/charge")
 	public void webhooks(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		request.setCharacterEncoding("UTF8");
@@ -38,7 +42,7 @@ public class WebhooksController {
             	break;
             }
         }
-        System.out.println("x-pingplusplus-signature:"+signature);
+        log.info("x-pingplusplus-signature:\n"+signature);
         // 获得 http body 内容
         BufferedReader reader = request.getReader();
         StringBuffer buffer = new StringBuffer();
@@ -48,20 +52,19 @@ public class WebhooksController {
         }
         reader.close();
         webhooksRawPostData = buffer.toString();
-        System.out.println("-----webhooks返回的body------\n"+webhooksRawPostData);
+        log.info("-----webhooks返回的body------\n"+webhooksRawPostData);
         boolean isVerify = false;
         try {
         	isVerify = WebhooksVerifyUtil.verifyData(webhooksRawPostData, signature);
 		} catch (Exception e) {
 			response.setStatus(500);
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			return;
 		}
         WebhooksDTO event = null;
         String callbackResult = null;
 //        ResponseMessage respMsg = null;
         if(isVerify){
-        	
         	// 解析异步通知数据
         	event = Webhooks.eventParse2(webhooksRawPostData);
         	String callbackUrl = event.getData().getCallbackUrl();
@@ -71,9 +74,9 @@ public class WebhooksController {
         	callbackResult = HttpUtils.sendRequest(callbackUrl, data, "utf-8", 3000);
 //        	Gson gson= new GsonBuilder().create();
 //        	respMsg = gson.fromJson(callbackResult, ResponseMessage.class);
-        	System.out.println("----客户端接受webhooks返回值-----\n"+callbackResult);
+        	log.info("----客户端接受webhooks返回值-----\n"+callbackResult);
         }else{
-        	System.out.println("-----接受webhooks验证没有通过-----");
+        	log.info("-----接受webhooks验证没有通过-----");
         	response.setStatus(500);
         	return;
         }

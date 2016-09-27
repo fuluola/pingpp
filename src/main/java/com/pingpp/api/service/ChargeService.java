@@ -86,6 +86,8 @@ public class ChargeService {
         }else if(Constants.PayChannel.WX_PUB.value.equals(dto.getChannel())){
         	  extra.put("open_id", dto.getOpenId());
         	  chargeMap.put("extra", extra);
+        }else if(Constants.PayChannel.WX_WAP.value.equals(dto.getChannel())) {
+        	
         }
         Map<String, String> metadata = new HashMap<String, String>();
         metadata.put("callbackUrl", dto.getCallbackUrl());

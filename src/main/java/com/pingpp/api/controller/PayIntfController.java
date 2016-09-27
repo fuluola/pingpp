@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +41,7 @@ public class PayIntfController {
 //	 private final static String apiKey = "sk_test_iX5abLDizLW1yDKKmL4m1CCO";
 	// private final static String apiKey = "sk_live_ejnLuPrTKWPSmbnLK4qvb9C0";
 //	private final static String apiKey = PropertiesUtil.getTestApikey();
+	private static Log log = LogFactory.getLog(WebhooksController.class);
 	private final static String apiKey = PropertiesUtil.getLiveApikey();
 
 	 private final static String appId = "app_iDy9yPXH88uTa5uv";
@@ -65,8 +68,7 @@ public class PayIntfController {
 	     // 设置 API Key
         Pingpp.apiKey = apiKey;
         // 设置私钥路径，用于请求签名
-        Pingpp.privateKeyPath = privateKeyFilePath;
-        
+        Pingpp.privateKeyPath = privateKeyFilePath;       
         String partner=(String)params.get("partner");
         List<String> idList = PropertiesUtil.getPartnerId();
         
@@ -74,20 +76,19 @@ public class PayIntfController {
         	return new ResponseMessage(ResponseMessage.ERROR_CODE,"partner参数为空或者在系统不存在",null);
         }
         Gson gson =new Gson();
-        System.out.println("------- 创建 charge -------");
+        log.info("------- 创建 charge -------");
         String content = (String)params.get("content");
         String deContent = null;
         String verify2 = null;
 		try {
 			deContent = new String(new Base64().decode(content),"utf-8");
-			System.out.println("-----请求参数-----\n"+deContent);
+			log.info("-----请求参数-----\n"+deContent);
 			verify2 = SecurityUtil.MD5((partner+content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
 			
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),null);
-		}
-		
+		}		
         String verify = (String) params.get("verify");
         ResponseMessage respMsg = null;
         if(StringUtils.isBlank(verify)){
@@ -109,7 +110,7 @@ public class PayIntfController {
 			charge = chargeService.createCharge(dto);
 		} catch (AuthenticationException | InvalidRequestException | APIConnectionException | APIException
 				| ChannelException e) {
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),null);
 		}
         if(charge==null){
@@ -136,7 +137,7 @@ public class PayIntfController {
         String content = (String)params.get("content");
 		try {
 			id = new String(new Base64().decode(content),"utf-8");
-			System.out.println("-----请求参数-----\n"+id);
+			log.info("-----请求参数-----\n"+id);
 			verify2 = SecurityUtil.MD5((partner+content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
 			
@@ -152,8 +153,7 @@ public class PayIntfController {
 			charge = chargeService.retrieve(id);
 		} catch (AuthenticationException | InvalidRequestException
 				| APIConnectionException | APIException | ChannelException e) {
-			
-			e.printStackTrace();
+			log.error(e.getMessage(),e);
 			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),charge);
 		}
     	return new ResponseMessage(ResponseMessage.SUCCESS_CODE,"发起交易请求成功",charge);
