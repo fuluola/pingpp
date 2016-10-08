@@ -16,7 +16,7 @@ public class PropertiesUtil {
 	private static Properties properties = new Properties();
 	
 	static{
-		ClassPathResource resource = new ClassPathResource("/conf/pingpp.properties");
+		ClassPathResource resource = new ClassPathResource("/pingpp.properties");
 		try {
 			properties.load(resource.getInputStream());
 		} catch (IOException e) {
