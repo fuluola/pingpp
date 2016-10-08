@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class TestController {
 
 	public static Log logger = LogFactory.getLog(TestController.class);
-	@RequestMapping(value="")
+	@RequestMapping(value="test")
 	@ResponseBody
 	public String test(HttpServletRequest request, HttpServletResponse response){
 	

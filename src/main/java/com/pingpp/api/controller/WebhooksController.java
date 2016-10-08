@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
@@ -68,13 +69,16 @@ public class WebhooksController {
         	// 解析异步通知数据
         	event = Webhooks.eventParse2(webhooksRawPostData);
         	String callbackUrl = event.getData().getCallbackUrl();
+        	log.info("------接受webhook验证签名成功------");
         	NameValuePair[] data = new NameValuePair[2];
         	data[0] = new NameValuePair("content", Base64.encodeBase64String(webhooksRawPostData.getBytes("utf-8")));
         	data[1] = new NameValuePair("verify", Base64.encodeBase64String(webhooksRawPostData.getBytes("utf-8")));
-        	callbackResult = HttpUtils.sendRequest(callbackUrl, data, "utf-8", 3000);
-//        	Gson gson= new GsonBuilder().create();
-//        	respMsg = gson.fromJson(callbackResult, ResponseMessage.class);
-        	log.info("----客户端接受webhooks返回值-----\n"+callbackResult);
+        	if(StringUtils.isNotBlank(callbackUrl)){
+        		
+        		callbackResult = HttpUtils.sendRequest(callbackUrl, data, "utf-8", 3000);
+        		log.info("----客户端接受webhooks返回值-----\n"+callbackResult);
+        	}
+
         }else{
         	log.info("-----接受webhooks验证没有通过-----");
         	response.setStatus(500);

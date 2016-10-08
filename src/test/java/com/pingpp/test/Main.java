@@ -62,14 +62,15 @@ public class Main {
         
         ChargeDTO dto = new ChargeDTO();
         dto.setAmount(1);
-        dto.setBody("my wx_wap");
-        dto.setChannel("wx_wap");
+        dto.setBody("my wx_pub_qr");
+        dto.setChannel("wx_pub_qr");
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
-        dto.setOrderNo("HB123456");
+        dto.setOrderNo("HB12345678");
         dto.setSubject("my subject");
         dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
+        dto.setProductId("rabbit");
         dto.setSuccessUrl("http://www.baidu.com");
         dto.setCallbackUrl("http://127.0.0.1:8080/");
         Gson gson = new Gson();
@@ -77,9 +78,9 @@ public class Main {
         String orderId = "ch_XP8Ga1qfnf5GC8ezf9P8yDmL";
         String encode = new String(new Base64().encode(json.getBytes("utf-8")),"utf-8");
         Map<String, Object> chargeMap = new HashMap<String, Object>();
-        String verify = SecurityUtil.MD5(("dingyi"+encode+PropertiesUtil.getSecretKey()).getBytes("utf-8"));
+        String verify = SecurityUtil.MD5(("ihomeins"+encode+PropertiesUtil.getSecretKey()).getBytes("utf-8"));
         
-        chargeMap.put("partner", "dingyi");
+        chargeMap.put("partner", "ihomeins");
         chargeMap.put("content", encode);
         chargeMap.put("verify", verify);
         
