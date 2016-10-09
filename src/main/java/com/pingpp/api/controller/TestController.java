@@ -1,5 +1,9 @@
 package com.pingpp.api.controller;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -7,17 +11,31 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+import com.pingpp.api.util.MatrixToImageWriter;
 
 @Controller
 public class TestController {
 
 	public static Log logger = LogFactory.getLog(TestController.class);
-	@RequestMapping(value="")
-	@ResponseBody
-	public String test(HttpServletRequest request, HttpServletResponse response){
+	@RequestMapping(value="qrcode")
+	public void test(HttpServletRequest request, HttpServletResponse response){
 	
-		 response.setStatus(200);
-		 return "欢迎来到PINGXX服务端";
+		try {
+            
+		     String content = "https://my.oschina.net/fuluola";
+		     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+		     Map hints = new HashMap();
+		     hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+		     BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, 400, 400,hints);
+		     MatrixToImageWriter.writeToStream(bitMatrix, "jpg", response.getOutputStream());
+		     
+		 } catch (Exception e) {
+		     e.printStackTrace();
+		 }
 	}
 }
