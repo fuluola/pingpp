@@ -76,7 +76,7 @@ public class ChargeService {
         if(Constants.PayChannel.ALIPAY_WAP.value.equals(dto.getChannel())){
         	
         	extra.put("success_url", dto.getSuccessUrl());
-        	extra.put("cancel_url", "http://127.0.0.1:8080/pingpp");
+        	extra.put("cancel_url", dto.getCancelUrl());
         	chargeMap.put("extra", extra);
         }else if(Constants.PayChannel.ALIPAY_PC.value.equals(dto.getChannel())){
         	extra.put("success_url", dto.getSuccessUrl());
@@ -88,6 +88,9 @@ public class ChargeService {
         	  chargeMap.put("extra", extra);
         }else if(Constants.PayChannel.WX_WAP.value.equals(dto.getChannel())) {
         	
+        }else if(Constants.PayChannel.WX_PUB_QR.value.equals(dto.getChannel())) {
+        	  extra.put("product_id", dto.getProductId());
+        	  chargeMap.put("extra", extra);
         }
         Map<String, String> metadata = new HashMap<String, String>();
         metadata.put("callbackUrl", dto.getCallbackUrl());

@@ -19,6 +19,7 @@ public class ChargeDTO {
 	private String cancelUrl;
 	private String wxPub;
 	private String openId;//微信公众号ID
+	private String productId;//产品ID
 	private String partner;//商户编码
 	/**
 	 * @return the amount
@@ -147,6 +148,11 @@ public class ChargeDTO {
 	public void setPartner(String partner) {
 		this.partner = partner;
 	}
-	
+	public String getProductId() {
+		return productId;
+	}
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
 	
 }
