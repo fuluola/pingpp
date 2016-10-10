@@ -27,5 +27,34 @@
        <property name="prefix" value="/WEB-INF/jsp/" />              <!-- 模板的路径 -->  
        <property name="suffix" value=".jsp" />                <!-- 模板文件的后缀-->  
     </bean>  
-      
-</beans>  
+  
+   <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+	</bean>
+	<bean id="pingxxOrderDao" class="com.pingxx.web.dao.impl.PingxxOrderDaoImpl"></bean>
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		 <property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/test</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value></value>
+		</property>
+		  <!-- 连接池启动时的初始值 -->
+		<!-- <property name="initialSize" value="2"></property> -->
+		  <!-- 连接池的最大值 -->
+		<!-- <property name="maxActive" value="20"></property> -->
+		  <!-- 最大空间值、当经过一个高峰时间后，连接池可以慢慢将已经用不到的连接慢慢释放一部分，直至减少的maxIdle为止 -->
+		<!-- <property name="maxIdle" value="20"></property> -->
+		  <!-- 最小空间值，当空间的连接数少于阀值时，连接池就会预申请一些连接，以免洪峰来时 来不及申请 -->
+		<!-- <property name="minIdle" value="5"></property> -->
+	</bean>
+</beans>
+
