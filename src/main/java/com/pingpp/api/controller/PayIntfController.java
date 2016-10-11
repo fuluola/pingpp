@@ -30,8 +30,10 @@ import com.pingplusplus.model.Charge;
 import com.pingpp.api.model.ChargeDTO;
 import com.pingpp.api.model.ResponseMessage;
 import com.pingpp.api.service.ChargeService;
+import com.pingpp.api.util.BeanUtils;
 import com.pingpp.api.util.PropertiesUtil;
 import com.pingpp.api.util.SecurityUtil;
+import com.pingxx.web.dao.PingxxOrderDao;
 
 @Controller
 public class PayIntfController {
@@ -44,7 +46,7 @@ public class PayIntfController {
 	private static Log log = LogFactory.getLog(WebhooksController.class);
 	private final static String apiKey = PropertiesUtil.getLiveApikey();
 
-	 private final static String appId = "app_iDy9yPXH88uTa5uv";
+	private final static String appId = "app_iDy9yPXH88uTa5uv";
 	 
 	 
     /**
@@ -59,7 +61,9 @@ public class PayIntfController {
 
     @Autowired
     private ChargeService chargeService;
-    
+	@Autowired
+	private PingxxOrderDao pingxxOrderDao;
+	
     @ResponseBody
 	@RequestMapping(value="client/ping/charge",method = RequestMethod.POST)
 	public ResponseMessage charge(HttpServletRequest request,HttpServletResponse response,
@@ -116,6 +120,9 @@ public class PayIntfController {
         if(charge==null){
         	respMsg = new ResponseMessage(ResponseMessage.ERROR_CODE,"没有返回支付对象",null);
         }
+        
+        pingxxOrderDao.insert(BeanUtils.copyChargeToPingxxOrder(charge));
+        
         respMsg = new ResponseMessage(ResponseMessage.SUCCESS_CODE,"发起交易请求成功",charge);
 		return respMsg;
 	}

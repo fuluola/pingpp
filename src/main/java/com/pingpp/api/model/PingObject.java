@@ -22,6 +22,13 @@ public class PingObject implements java.io.Serializable{
 	public String getCallbackUrl(){
 		return this.object.getMetadata().callbackUrl;
 	}
+	public boolean isPaid(){
+		return this.object.isPaid();
+	}
+	
+	public String getTransactionNo() {
+		return this.object.getTransaction_no();
+	}
 }
  class EventDTO extends PingppObject {
 

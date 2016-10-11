@@ -12,6 +12,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,6 +20,7 @@ import com.pingplusplus.model.Webhooks;
 import com.pingpp.api.model.WebhooksDTO;
 import com.pingpp.api.util.HttpUtils;
 import com.pingpp.api.util.WebhooksVerifyUtil;
+import com.pingxx.web.dao.PingxxOrderDao;
 
 /** 
  * @author  fuzhuan e-mail: 676646535@qq.com
@@ -28,6 +30,9 @@ import com.pingpp.api.util.WebhooksVerifyUtil;
 public class WebhooksController {
 	
 	private static Log log = LogFactory.getLog(WebhooksController.class);
+	
+	@Autowired
+	private PingxxOrderDao pingxxOrderDao;
 	
 	@RequestMapping(value="server/webhooks/charge")
 	public void webhooks(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -69,6 +74,9 @@ public class WebhooksController {
         	// 解析异步通知数据
         	event = Webhooks.eventParse2(webhooksRawPostData);
         	String callbackUrl = event.getData().getCallbackUrl();
+        	boolean paid = event.getData().isPaid();
+        	String channelSerial = event.getData().getTransactionNo();
+        	pingxxOrderDao.update(paid, channelSerial);
         	log.info("------接受webhook验证签名成功------");
         	NameValuePair[] data = new NameValuePair[2];
         	data[0] = new NameValuePair("content", Base64.encodeBase64String(webhooksRawPostData.getBytes("utf-8")));
@@ -78,7 +86,6 @@ public class WebhooksController {
         		callbackResult = HttpUtils.sendRequest(callbackUrl, data, "utf-8", 3000);
         		log.info("----客户端接受webhooks返回值-----\n"+callbackResult);
         	}
-
         }else{
         	log.info("-----接受webhooks验证没有通过-----");
         	response.setStatus(500);

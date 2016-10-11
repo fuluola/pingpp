@@ -67,12 +67,12 @@ public class Main {
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
-        dto.setOrderNo("HB12345678");
+        dto.setOrderNo("FZ000001");
         dto.setSubject("my subject");
-        dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
-        dto.setProductId("rabbit");
-        dto.setSuccessUrl("http://www.baidu.com");
-        dto.setCallbackUrl("http://127.0.0.1:8080/");
+        //dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
+        dto.setProductId("rabbit001");
+        dto.setSuccessUrl("https://my.oschina.net/fuluola");
+        dto.setCallbackUrl("https://my.oschina.net/fuluola");
         Gson gson = new Gson();
         String json = gson.toJson(dto);
         String orderId = "ch_XP8Ga1qfnf5GC8ezf9P8yDmL";
