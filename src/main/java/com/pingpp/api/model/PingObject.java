@@ -10,6 +10,7 @@ public class PingObject implements java.io.Serializable{
 	private static final long serialVersionUID = 8669281623891133824L;
 	
 	private EventDTO object;
+	
 
 	public EventDTO getObject() {
 		return object;
@@ -40,6 +41,10 @@ public class PingObject implements java.io.Serializable{
 	
 	public String getOrderNo(){
 		return this.object.getOrder_no();
+	}
+	
+	public String getPingxxId() {
+		return this.object.getId();
 	}
 }
  class EventDTO extends PingppObject {

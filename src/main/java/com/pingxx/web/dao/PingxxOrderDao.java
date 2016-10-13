@@ -25,9 +25,11 @@ public interface PingxxOrderDao {
 	 */
 	public int insert(PingxxOrderEntity entity);
 	/**
-	 * 接受webhooks，修改订单信息
-	 * @param entity
+	 *  接受webhooks，修改订单信息
+	 * @param paid
+	 * @param channelSerial
+	 * @param pingxxId
 	 * @return
 	 */
-	public int update(boolean paid,String channelSerial);
+	public int update(boolean paid,String channelSerial,String pingxxId);
 }

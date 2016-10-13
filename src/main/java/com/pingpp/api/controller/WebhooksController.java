@@ -77,11 +77,10 @@ public class WebhooksController {
         if(isVerify){
         	// 解析异步通知数据
         	event = Webhooks.eventParse2(webhooksRawPostData);
+        	log.info("------接受webhook验证签名成功------");
         	String callbackUrl = event.getData().getCallbackUrl();
         	boolean paid = event.getData().isPaid();
-        	
-        	pingxxOrderDao.update(paid, event.getData().getTransaction_no());
-        	log.info("------接受webhook验证签名成功------");
+        	pingxxOrderDao.update(paid, event.getData().getTransaction_no(),event.getData().getPingxxId());
         	NameValuePair[] data = new NameValuePair[3];
         	String content = Base64.encodeBase64String(webhooksRawPostData.getBytes("utf-8"));
         	data[0] = new NameValuePair("content", content);

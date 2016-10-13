@@ -47,10 +47,10 @@ public class PingxxOrderDaoImpl implements PingxxOrderDao {
 	}
 
 	@Override
-	public int update(boolean paid,String channelSerial) {
+	public int update(boolean paid,String channelSerial,String pingxxId) {
 		
 		return jdbcTemplate.update("update pingxx_order set payStatus=?,channelSerial=?,updateTime=now() WHERE pingxxId=?", 
-				paid?Constants.HAS_PAID:Constants.NOT_PAID,channelSerial);
+				paid?Constants.HAS_PAID:Constants.NOT_PAID,channelSerial,pingxxId);
 	}
 
 	@Override
