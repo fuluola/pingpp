@@ -26,8 +26,20 @@ public class PingObject implements java.io.Serializable{
 		return this.object.isPaid();
 	}
 	
-	public String getTransactionNo() {
+	public Long getTimepaid() {
+		return this.object.getTime_paid();
+	}
+	
+	public int getAmount() {
+		return this.object.getAmount();
+	}
+	
+	public String getTransaction_no() {
 		return this.object.getTransaction_no();
+	}
+	
+	public String getOrderNo(){
+		return this.object.getOrder_no();
 	}
 }
  class EventDTO extends PingppObject {

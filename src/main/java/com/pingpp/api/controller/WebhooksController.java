@@ -2,6 +2,7 @@ package com.pingpp.api.controller;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,8 +18,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.pingplusplus.model.Webhooks;
+import com.pingpp.api.model.Constants;
 import com.pingpp.api.model.WebhooksDTO;
+import com.pingpp.api.util.AESUtil;
 import com.pingpp.api.util.HttpUtils;
+import com.pingpp.api.util.PropertiesUtil;
+import com.pingpp.api.util.SecurityUtil;
 import com.pingpp.api.util.WebhooksVerifyUtil;
 import com.pingxx.web.dao.PingxxOrderDao;
 
@@ -69,18 +74,23 @@ public class WebhooksController {
 		}
         WebhooksDTO event = null;
         String callbackResult = null;
-//        ResponseMessage respMsg = null;
         if(isVerify){
         	// 解析异步通知数据
         	event = Webhooks.eventParse2(webhooksRawPostData);
         	String callbackUrl = event.getData().getCallbackUrl();
         	boolean paid = event.getData().isPaid();
-        	String channelSerial = event.getData().getTransactionNo();
-        	pingxxOrderDao.update(paid, channelSerial);
+        	
+        	pingxxOrderDao.update(paid, event.getData().getTransaction_no());
         	log.info("------接受webhook验证签名成功------");
-        	NameValuePair[] data = new NameValuePair[2];
-        	data[0] = new NameValuePair("content", Base64.encodeBase64String(webhooksRawPostData.getBytes("utf-8")));
-        	data[1] = new NameValuePair("verify", Base64.encodeBase64String(webhooksRawPostData.getBytes("utf-8")));
+        	NameValuePair[] data = new NameValuePair[3];
+        	String content = Base64.encodeBase64String(webhooksRawPostData.getBytes("utf-8"));
+        	data[0] = new NameValuePair("content", content);
+        	try {
+				data[1] = new NameValuePair("verify", SecurityUtil.MD5((content+PropertiesUtil.getSecretKey()).getBytes("UTF-8")));
+			} catch (NoSuchAlgorithmException e) {
+				e.printStackTrace();
+			}
+        	data[2] = new NameValuePair("token", generateToken(event));
         	if(StringUtils.isNotBlank(callbackUrl)){
         		
         		callbackResult = HttpUtils.sendRequest(callbackUrl, data, "utf-8", 3000);
@@ -97,5 +107,19 @@ public class WebhooksController {
         }  else {
             response.setStatus(500);
         }
+	}
+	
+	private String generateToken(WebhooksDTO event) {
+    	Long timepaid = event.getData().getTimepaid();
+    	int amount = event.getData().getAmount();
+    	String orderNo = event.getData().getOrderNo();
+    	String tokenPlain = "aes("+orderNo+":"+amount+":"+timepaid+")";
+    	String token="";
+		try {
+			token = AESUtil.encrypt(tokenPlain, Constants.AES_KEY);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	return token;
 	}
 }

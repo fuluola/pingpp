@@ -67,7 +67,7 @@ public class Main {
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
-        dto.setOrderNo("FZ000001");
+        dto.setOrderNo("FZ000002");
         dto.setSubject("my subject");
         //dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
         dto.setProductId("rabbit001");

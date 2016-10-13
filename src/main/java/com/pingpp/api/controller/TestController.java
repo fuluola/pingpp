@@ -32,17 +32,17 @@ public class TestController {
 	
 	@RequestMapping(value="qrcode")
 	@ResponseBody
-	public List<PingxxOrderEntity> test(HttpServletRequest request, HttpServletResponse response){
+	public PingxxOrderEntity test(HttpServletRequest request, HttpServletResponse response){
 	
 		try {
-            
+             String pingxxId = request.getParameter("pingxxId");
 		     String content = "https://my.oschina.net/fuluola";
 		     MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
 		     Map hints = new HashMap();
 		     hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 		     BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, 400, 400,hints);
 		   //  MatrixToImageWriter.writeToStream(bitMatrix, "jpg", response.getOutputStream());
-		     List<PingxxOrderEntity> list = pingxxOrderDao.findOrderPage(0, 0);
+		     PingxxOrderEntity list = pingxxOrderDao.findByPingxxId(pingxxId);
 		     return list;
 		 } catch (Exception e) {
 		     e.printStackTrace();
