@@ -62,12 +62,12 @@ public class Main {
         
         ChargeDTO dto = new ChargeDTO();
         dto.setAmount(1);
-        dto.setBody("my wx_pub_qr");
-        dto.setChannel("wx_pub_qr");
+        dto.setBody("my alipay_pc_direct");
+        dto.setChannel("alipay_pc_direct");
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
-        dto.setOrderNo("FZ000002");
+        dto.setOrderNo("FZ000006");
         dto.setSubject("my subject");
         //dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
         dto.setProductId("rabbit001");

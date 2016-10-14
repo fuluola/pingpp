@@ -34,8 +34,8 @@ public class PingxxOrderDaoImpl implements PingxxOrderDao {
 	@Override
 	public int insert(PingxxOrderEntity entity) {
 		
-		PingxxOrderEntity entity2 = findByPingxxId(entity.getPingxxId());
-		if(entity2!=null){
+		Integer row = findByPingxxId(entity.getPingxxId());
+		if(row>=1){
 			return 0;
 		}
 		int savedRow = jdbcTemplate.update("insert into pingxx_order (pingxxId,amount,currency,channel,payStatus,orderNo,partner,productId,subject,body,successUrl,cancelUrl,callbackUrl,clientIp,openId,createdTime) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,now())", 
@@ -54,10 +54,11 @@ public class PingxxOrderDaoImpl implements PingxxOrderDao {
 	}
 
 	@Override
-	public PingxxOrderEntity findByPingxxId(String pingxxId) {
+	public Integer findByPingxxId(String pingxxId) {
 		
-		String sql = "SELECT * FROM pingxx_order WHERE pingxxId=?";
-		return jdbcTemplate.queryForObject(sql, new Object[]{pingxxId}, new PingxxOrderRowMapper());
+		String sql = "SELECT count(1) FROM pingxx_order WHERE pingxxId=?";
+		Integer row = jdbcTemplate.queryForObject(sql, new Object[]{pingxxId}, Integer.class);
+		return row;
 	}
 
 }
