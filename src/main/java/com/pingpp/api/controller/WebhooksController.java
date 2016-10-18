@@ -17,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.google.gson.Gson;
 import com.pingplusplus.model.Webhooks;
 import com.pingpp.api.model.Constants;
+import com.pingpp.api.model.ResponseMessage;
 import com.pingpp.api.model.WebhooksDTO;
 import com.pingpp.api.util.AESUtil;
 import com.pingpp.api.util.HttpUtils;
@@ -35,6 +37,8 @@ import com.pingxx.web.dao.PingxxOrderDao;
 public class WebhooksController {
 	
 	private static Log log = LogFactory.getLog(WebhooksController.class);
+	
+	private static Gson gson = new Gson();
 	
 	@Autowired
 	private PingxxOrderDao pingxxOrderDao;
@@ -74,6 +78,7 @@ public class WebhooksController {
 		}
         WebhooksDTO event = null;
         String callbackResult = null;
+        ResponseMessage respMsg = null;
         if(isVerify){
         	// 解析异步通知数据
         	event = Webhooks.eventParse2(webhooksRawPostData);
@@ -94,6 +99,12 @@ public class WebhooksController {
         		
         		callbackResult = HttpUtils.sendRequest(callbackUrl, data, "utf-8", 3000);
         		log.info("----客户端接受webhooks返回值-----\n"+callbackResult);
+        		respMsg = gson.fromJson(callbackResult, ResponseMessage.class);
+        		if(ResponseMessage.SUCCESS_CODE.equals(respMsg.getCode())){
+        			  response.setStatus(200);
+        		}else{
+        			response.setStatus(500);
+        		}
         	}
         }else{
         	log.info("-----接受webhooks验证没有通过-----");

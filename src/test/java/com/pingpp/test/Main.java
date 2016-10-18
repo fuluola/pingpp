@@ -79,7 +79,7 @@ public class Main {
         String encode = new String(new Base64().encode(json.getBytes("utf-8")),"utf-8");
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         String verify = SecurityUtil.MD5(("ihomeins"+encode+PropertiesUtil.getSecretKey()).getBytes("utf-8"));
-        
+        String content ="";
         chargeMap.put("partner", "ihomeins");
         chargeMap.put("content", encode);
         chargeMap.put("verify", verify);
