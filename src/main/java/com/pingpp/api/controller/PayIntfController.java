@@ -163,6 +163,6 @@ public class PayIntfController {
 			log.error(e.getMessage(),e);
 			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),charge);
 		}
-    	return new ResponseMessage(ResponseMessage.SUCCESS_CODE,"发起交易请求成功",charge);
+    	return new ResponseMessage(ResponseMessage.SUCCESS_CODE,"查询成功",charge);
     }
 }

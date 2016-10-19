@@ -15,7 +15,13 @@ public interface PingxxOrderDao {
 	 * @param pingxxId
 	 * @return
 	 */
-	public Integer findByPingxxId(String pingxxId);
+	public Integer findCountByPingxxId(String pingxxId);
+	/**
+	 * 查询pingxx订单实体
+	 * @param pingxxId
+	 * @return
+	 */
+	public PingxxOrderEntity findByPingxxId(String pingxxId);
 	
 	public List<PingxxOrderEntity> findOrderPage(int pageSize,int pageIndex);
 	/**
