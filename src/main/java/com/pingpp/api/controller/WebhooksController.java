@@ -28,6 +28,7 @@ import com.pingpp.api.util.PropertiesUtil;
 import com.pingpp.api.util.SecurityUtil;
 import com.pingpp.api.util.WebhooksVerifyUtil;
 import com.pingxx.web.dao.PingxxOrderDao;
+import com.pingxx.web.entity.PingxxOrderEntity;
 
 /** 
  * @author  fuzhuan e-mail: 676646535@qq.com
@@ -79,11 +80,17 @@ public class WebhooksController {
         WebhooksDTO event = null;
         String callbackResult = null;
         ResponseMessage respMsg = null;
+        String callbackUrl =null;
         if(isVerify){
         	// 解析异步通知数据
         	event = Webhooks.eventParse2(webhooksRawPostData);
         	log.info("------接受webhook验证签名成功------");
-        	String callbackUrl = event.getData().getCallbackUrl();
+        	PingxxOrderEntity entity = pingxxOrderDao.findByPingxxId(event.getData().getPingxxId());
+        	if(entity!=null){
+        		
+        		 callbackUrl = entity.getCallbackUrl();
+        	}
+        	log.info("------callbackUrl------:"+callbackUrl);
         	boolean paid = event.getData().isPaid();
         	pingxxOrderDao.update(paid, event.getData().getTransaction_no(),event.getData().getPingxxId());
         	NameValuePair[] data = new NameValuePair[3];
@@ -97,6 +104,7 @@ public class WebhooksController {
         	data[2] = new NameValuePair("token", generateToken(event));
         	if(StringUtils.isNotBlank(callbackUrl)){
         		
+        		log.info("------pingxxServer data------\n"+data);
         		callbackResult = HttpUtils.sendRequest(callbackUrl, data, "utf-8", 3000);
         		log.info("----客户端接受webhooks返回值-----\n"+callbackResult);
         		respMsg = gson.fromJson(callbackResult, ResponseMessage.class);
@@ -109,13 +117,6 @@ public class WebhooksController {
         }else{
         	log.info("-----接受webhooks验证没有通过-----");
         	response.setStatus(500);
-        	return;
-        }
-        
-        if ("charge.succeeded".equals(event.getType())) {
-            response.setStatus(200);
-        }  else {
-            response.setStatus(500);
         }
 	}
 	

@@ -34,7 +34,7 @@ public class PingxxOrderDaoImpl implements PingxxOrderDao {
 	@Override
 	public int insert(PingxxOrderEntity entity) {
 		
-		Integer row = findByPingxxId(entity.getPingxxId());
+		Integer row = findCountByPingxxId(entity.getPingxxId());
 		if(row>=1){
 			return 0;
 		}
@@ -54,11 +54,21 @@ public class PingxxOrderDaoImpl implements PingxxOrderDao {
 	}
 
 	@Override
-	public Integer findByPingxxId(String pingxxId) {
+	public Integer findCountByPingxxId(String pingxxId) {
 		
 		String sql = "SELECT count(1) FROM pingxx_order WHERE pingxxId=?";
 		Integer row = jdbcTemplate.queryForObject(sql, new Object[]{pingxxId}, Integer.class);
 		return row;
+	}
+
+	@Override
+	public PingxxOrderEntity findByPingxxId(String pingxxId) {
+		String sql = "SELECT * FROM pingxx_order WHERE pingxxId=?";
+		List<PingxxOrderEntity> list = jdbcTemplate.query(sql, new Object[]{pingxxId}, new PingxxOrderRowMapper());
+		if(list.size()>=1){
+			return list.get(0);
+		}
+		return null;
 	}
 
 }
@@ -68,11 +78,12 @@ class PingxxOrderRowMapper implements RowMapper<PingxxOrderEntity> {
 	@Override
 	public PingxxOrderEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
 		PingxxOrderEntity entity = new PingxxOrderEntity();
-		entity.setPingxxId(rs.getString("id"));
+		entity.setPingxxId(rs.getString("pingxxId"));
 		entity.setAmount(rs.getInt("amount"));
 		entity.setChannel(rs.getString("channel"));
 		entity.setCreatedTime(rs.getDate("createdTime"));
 		entity.setOrderNo(rs.getString("orderNo"));
+		entity.setCallbackUrl(rs.getString("callbackUrl"));
 		return entity;
 	}
 	

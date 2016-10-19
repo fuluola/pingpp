@@ -42,8 +42,7 @@ public class TestController {
 		     hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
 		     BitMatrix bitMatrix = multiFormatWriter.encode(content, BarcodeFormat.QR_CODE, 400, 400,hints);
 		   //  MatrixToImageWriter.writeToStream(bitMatrix, "jpg", response.getOutputStream());
-		     int list = pingxxOrderDao.findByPingxxId(pingxxId);
-		     return null;
+		     return pingxxOrderDao.findByPingxxId(pingxxId);
 		 } catch (Exception e) {
 		     e.printStackTrace();
 		 }

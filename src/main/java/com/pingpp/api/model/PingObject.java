@@ -21,7 +21,7 @@ public class PingObject implements java.io.Serializable{
 	}
 	
 	public String getCallbackUrl(){
-		return this.object.getMetadata().callbackUrl;
+		return this.object.getMetadata().getCallbackUrl();
 	}
 	public boolean isPaid(){
 		return this.object.isPaid();
@@ -301,5 +301,23 @@ class Refunds {
 	}
 }
 class Metadata {
-	public String callbackUrl;
+	private String callbackUrl;
+	private String partner;
+	
+	public String getCallbackUrl() {
+		return callbackUrl;
+	}
+
+	public void setCallbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
+	}
+
+	public String getPartner() {
+		return partner;
+	}
+
+	public void setPartner(String partner) {
+		this.partner = partner;
+	}
+	
 }
