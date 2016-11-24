@@ -10,6 +10,7 @@ public class PingObject implements java.io.Serializable{
 	private static final long serialVersionUID = 8669281623891133824L;
 	
 	private EventDTO object;
+	
 
 	public EventDTO getObject() {
 		return object;
@@ -20,7 +21,30 @@ public class PingObject implements java.io.Serializable{
 	}
 	
 	public String getCallbackUrl(){
-		return this.object.getMetadata().callbackUrl;
+		return this.object.getMetadata().getCallbackUrl();
+	}
+	public boolean isPaid(){
+		return this.object.isPaid();
+	}
+	
+	public Long getTimepaid() {
+		return this.object.getTime_paid();
+	}
+	
+	public int getAmount() {
+		return this.object.getAmount();
+	}
+	
+	public String getTransaction_no() {
+		return this.object.getTransaction_no();
+	}
+	
+	public String getOrderNo(){
+		return this.object.getOrder_no();
+	}
+	
+	public String getPingxxId() {
+		return this.object.getId();
 	}
 }
  class EventDTO extends PingppObject {
@@ -277,5 +301,23 @@ class Refunds {
 	}
 }
 class Metadata {
-	public String callbackUrl;
+	private String callbackUrl;
+	private String partner;
+	
+	public String getCallbackUrl() {
+		return callbackUrl;
+	}
+
+	public void setCallbackUrl(String callbackUrl) {
+		this.callbackUrl = callbackUrl;
+	}
+
+	public String getPartner() {
+		return partner;
+	}
+
+	public void setPartner(String partner) {
+		this.partner = partner;
+	}
+	
 }

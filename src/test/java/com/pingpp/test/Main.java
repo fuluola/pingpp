@@ -62,24 +62,23 @@ public class Main {
         
         ChargeDTO dto = new ChargeDTO();
         dto.setAmount(1);
-        dto.setBody("my wx_pub_qr");
-        dto.setChannel("wx_pub_qr");
+        dto.setBody("支付宝手机wap支付");
+        dto.setChannel("alipay_wap");
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
-        dto.setOrderNo("HB12345678");
-        dto.setSubject("my subject");
-        dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
-        dto.setProductId("rabbit");
-        dto.setSuccessUrl("http://www.baidu.com");
-        dto.setCallbackUrl("http://127.0.0.1:8080/");
+        dto.setOrderNo("FZ000016");
+        dto.setSubject("支付宝扫码支付测试");
+        //dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
+        dto.setProductId("rabbit002");
+        dto.setSuccessUrl("https://my.oschina.net/fuluola");
+        dto.setCallbackUrl("http://lai68.vicp.net:14485/PayApi/CallBack");
         Gson gson = new Gson();
         String json = gson.toJson(dto);
         String orderId = "ch_XP8Ga1qfnf5GC8ezf9P8yDmL";
         String encode = new String(new Base64().encode(json.getBytes("utf-8")),"utf-8");
         Map<String, Object> chargeMap = new HashMap<String, Object>();
         String verify = SecurityUtil.MD5(("ihomeins"+encode+PropertiesUtil.getSecretKey()).getBytes("utf-8"));
-        
         chargeMap.put("partner", "ihomeins");
         chargeMap.put("content", encode);
         chargeMap.put("verify", verify);
@@ -88,7 +87,7 @@ public class Main {
           json = gson.toJson(chargeMap);
           System.out.println(json);
        // json = gson.toJson(event);
-        //parseEvent();
+       // parseEvent();
 
     }
 
@@ -148,7 +147,7 @@ public class Main {
     			+"\"failure_code\":null,"
     			+"\"failure_msg\":null,"
     			+"\"metadata\":{"
-    			+"\"callbackUrl\":\"http://112.163.152.19:8082\""
+    			+"\"partner\":\"ihomeins\",\"callbackUrl\":\"http://lai68.vicp.net:14485/PayApi/CallBack\""
     			+"},"
     			+"\"credential\":{},"
     			+"\"description\":\"YourDescription\""
@@ -160,7 +159,7 @@ public class Main {
     			+"}";
         Gson gson = new Gson();
         Type type = new TypeToken<WebhooksDTO>(){}.getType();
-        WebhooksDTO event = gson.fromJson(json, type);
+        WebhooksDTO event = gson.fromJson(json, WebhooksDTO.class);
     	System.out.println(event.getData().getCallbackUrl());
     }
 }

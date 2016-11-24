@@ -17,7 +17,8 @@ public class WebhooksDTO implements java.io.Serializable{
 	    private Integer pendingWebhooks;
 	    private String type;
 	    private String request;
-
+	    private String token;
+	    
 	    public String getId() {
 	        return id;
 	    }
@@ -82,4 +83,12 @@ public class WebhooksDTO implements java.io.Serializable{
 	        this.request = request;
 	    }
 
+		public String getToken() {
+			return token;
+		}
+
+		public void setToken(String token) {
+			this.token = token;
+		}
+	    
 }
