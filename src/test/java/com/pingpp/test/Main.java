@@ -62,15 +62,15 @@ public class Main {
         
         ChargeDTO dto = new ChargeDTO();
         dto.setAmount(1);
-        dto.setBody("中文测试");
-        dto.setChannel("wx_pub_qr");
+        dto.setBody("支付宝手机wap支付");
+        dto.setChannel("alipay_wap");
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
-        dto.setOrderNo("FZ000011");
-        dto.setSubject("webhooks回调url测试2");
+        dto.setOrderNo("FZ000016");
+        dto.setSubject("支付宝扫码支付测试");
         //dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
-        dto.setProductId("rabbit001");
+        dto.setProductId("rabbit002");
         dto.setSuccessUrl("https://my.oschina.net/fuluola");
         dto.setCallbackUrl("http://lai68.vicp.net:14485/PayApi/CallBack");
         Gson gson = new Gson();
