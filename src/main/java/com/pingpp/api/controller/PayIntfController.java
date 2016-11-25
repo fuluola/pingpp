@@ -1,5 +1,6 @@
 package com.pingpp.api.controller;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
 
 import com.google.gson.Gson;
 import com.pingplusplus.Pingpp;
@@ -85,10 +89,10 @@ public class PayIntfController {
         String deContent = null;
         String verify2 = null;
 		try {
-			deContent = new String(new Base64().decode(content),"utf-8");
+			deContent = new String( new BASE64Decoder().decodeBuffer(content),"utf-8");
 			log.info("-----请求参数-----\n"+deContent);
 			verify2 = SecurityUtil.MD5((partner+content+PropertiesUtil.getSecretKey()).getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException | NoSuchAlgorithmException e) {
+		} catch ( NoSuchAlgorithmException | IOException e) {
 			
 			log.error(e.getMessage(),e);
 			return new ResponseMessage(ResponseMessage.ERROR_CODE,e.getMessage(),null);

@@ -1,7 +1,6 @@
 package com.pingpp.api.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
-import com.pingpp.api.util.MatrixToImageWriter;
 import com.pingxx.web.dao.PingxxOrderDao;
 import com.pingxx.web.entity.PingxxOrderEntity;
 

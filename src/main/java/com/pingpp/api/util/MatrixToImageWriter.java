@@ -11,7 +11,6 @@ import com.google.zxing.common.BitMatrix;
 
 /** 
  * @author  fuzhuan e-mail: 676646535@qq.com
- * @date 2016Äê10ÔÂ9ÈÕ 
  */
 public class MatrixToImageWriter {
 

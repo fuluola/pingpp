@@ -62,17 +62,17 @@ public class Main {
         
         ChargeDTO dto = new ChargeDTO();
         dto.setAmount(1);
-        dto.setBody("支付宝手机wap支付");
-        dto.setChannel("alipay_wap");
+        dto.setBody("微信扫码支付");
+        dto.setChannel("wx_pub_qr");
         dto.setClientIp("127.0.0.1");
         dto.setCurrency("cny");
         
-        dto.setOrderNo("FZ000016");
-        dto.setSubject("支付宝扫码支付测试");
+        dto.setOrderNo("FZ000020");
+        dto.setSubject("微信扫码支付测试");
         //dto.setOpenId("o9zpMs7Xk7e9aJbTXgufovuWGp8c");
         dto.setProductId("rabbit002");
         dto.setSuccessUrl("https://my.oschina.net/fuluola");
-        dto.setCallbackUrl("http://lai68.vicp.net:14485/PayApi/CallBack");
+        dto.setCallbackUrl("http://lai68.vicp.net:14485/PayApi/CallBack33");
         Gson gson = new Gson();
         String json = gson.toJson(dto);
         String orderId = "ch_XP8Ga1qfnf5GC8ezf9P8yDmL";
