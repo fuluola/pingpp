@@ -88,7 +88,8 @@ public class Main {
           System.out.println(json);
        // json = gson.toJson(event);
        // parseEvent();
-
+          Main main = new Main();
+          main.classLoader();
     }
 
     private static SecureRandom random = new SecureRandom();

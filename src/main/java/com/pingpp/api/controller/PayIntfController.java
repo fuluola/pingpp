@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import com.google.gson.Gson;
 import com.pingplusplus.Pingpp;
